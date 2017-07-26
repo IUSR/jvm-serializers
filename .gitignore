@@ -1,0 +1,3 @@
+/tpc/lib/*.jar
+/tpc/lib/extra/*.jar
+/tpc/target
