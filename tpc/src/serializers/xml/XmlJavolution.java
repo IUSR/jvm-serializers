@@ -103,7 +103,7 @@ public class XmlJavolution
 			return super.getFormat(cls);
 		}
 
-		private final XMLFormat<Image> ImageConverter = new XMLFormat<Image>(null)
+		private final XMLFormat<Image> ImageConverter = new XMLFormat<Image>()
 		{
 			@Override
 			public void write(Image image, XMLFormat.OutputElement xml) throws XMLStreamException
@@ -126,7 +126,7 @@ public class XmlJavolution
 			}
 		};
 
-		private final XMLFormat<Media> MediaConverter = new XMLFormat<Media>(null)
+		private final XMLFormat<Media> MediaConverter = new XMLFormat<Media>()
 		{
 			@Override
 			public void write(Media media, XMLFormat.OutputElement xml) throws XMLStreamException
@@ -171,7 +171,7 @@ public class XmlJavolution
 			}
 		};
 
-		private final XMLFormat<MediaContent> MediaContentConverter = new XMLFormat<MediaContent>(null)
+		private final XMLFormat<MediaContent> MediaContentConverter = new XMLFormat<MediaContent>()
 		{
 			@Override
 			public void write(MediaContent content, XMLFormat.OutputElement xml) throws XMLStreamException
@@ -183,7 +183,7 @@ public class XmlJavolution
 			}
 
 			@Override
-			public MediaContent newInstance(java.lang.Class<MediaContent> cls, XMLFormat.InputElement xml) throws XMLStreamException
+			public MediaContent newInstance(java.lang.Class<? extends MediaContent> cls, XMLFormat.InputElement xml) throws XMLStreamException
 			{
 				Media media = (Media) xml.getNext();
 				List<Image> images = new ArrayList<Image>();

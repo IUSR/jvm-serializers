@@ -5,12 +5,14 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import cc.plural.jsonij.FastJSONParser;
+import cc.plural.jsonij.marshal.JSONMarshalerException;
 import serializers.*;
 
-import jsonij.json.JSON;
-import jsonij.json.JSONMarshaler;
-import jsonij.json.JSONParser;
-import jsonij.json.Value;
+import cc.plural.jsonij.JSON;
+import cc.plural.jsonij.marshal.JSONMarshaler;
+import cc.plural.jsonij.JSONParser;
+import cc.plural.jsonij.Value;
 import data.media.Image;
 import data.media.Media;
 import data.media.MediaContent;
@@ -53,8 +55,7 @@ public class JsonijManualTree
       return readMediaContent(mediaContentJsonInput);
     }
 
-    public byte[] serialize(MediaContent mediaContent) throws IOException
-    {
+    public byte[] serialize(MediaContent mediaContent) throws IOException, JSONMarshalerException {
       StringWriter writer = new StringWriter();
       writeMediaContent(writer, mediaContent);
       writer.flush();
@@ -64,7 +65,7 @@ public class JsonijManualTree
     @SuppressWarnings({ "unchecked", "rawtypes" })
     static MediaContent readMediaContent(String mediaContentJsonInput) throws Exception
     {
-      JSONParser parser = new JSONParser();
+      JSONParser parser = new FastJSONParser();
       JSON.Object mediaContentJsonObject = (JSON.Object) parser.parse(mediaContentJsonInput);
 
       JSON.Object mediaJsonObject = (JSON.Object) mediaContentJsonObject.get("media");
@@ -82,7 +83,7 @@ public class JsonijManualTree
     @SuppressWarnings({ "unchecked" })
     static List<Image> readImages(String imagesJsonInput) throws Exception
     {
-      JSONParser parser = new JSONParser();
+      JSONParser parser = new FastJSONParser();
       JSON.Array<Value> imageValues = (JSON.Array<Value>) parser.parse(imagesJsonInput);
       return readImages(imageValues);
     }
@@ -104,7 +105,7 @@ public class JsonijManualTree
     @SuppressWarnings("rawtypes")
     static Image readImage(String imageJsonInput) throws Exception
     {
-      JSONParser parser = new JSONParser();
+      JSONParser parser = new FastJSONParser();
       JSON.Object imageJsonObject = (JSON.Object) parser.parse(imageJsonInput);
       return readImage(imageJsonObject);
     }
@@ -124,7 +125,7 @@ public class JsonijManualTree
     @SuppressWarnings({ "rawtypes" })
     static Media readMedia(String mediaJsonInput) throws Exception
     {
-      JSONParser parser = new JSONParser();
+      JSONParser parser = new FastJSONParser();
       JSON.Object mediaJsonObject = (JSON.Object) parser.parse(mediaJsonInput);
       return readMedia(mediaJsonObject);
     }
@@ -163,26 +164,22 @@ public class JsonijManualTree
       return media;
     }
 
-    static void writeMedia(StringWriter writer, Media media)
-    {
+    static void writeMedia(StringWriter writer, Media media) throws JSONMarshalerException {
       JSON json = JSONMarshaler.marshalObject(media);
       writer.write(json.toJSON());
     }
 
-    static void writeImage(StringWriter writer, Image image)
-    {
+    static void writeImage(StringWriter writer, Image image) throws JSONMarshalerException {
       JSON json = JSONMarshaler.marshalObject(image);
       writer.write(json.toJSON());
     }
 
-    static void writeImages(StringWriter writer, List<Image> images)
-    {
+    static void writeImages(StringWriter writer, List<Image> images) throws JSONMarshalerException {
       JSON json = JSONMarshaler.marshalObject(images);
       writer.write(json.toJSON());
     }
 
-    static void writeMediaContent(StringWriter writer, MediaContent mediaContent)
-    {
+    static void writeMediaContent(StringWriter writer, MediaContent mediaContent) throws JSONMarshalerException {
       JSON json = JSONMarshaler.marshalObject(mediaContent);
       writer.write(json.toJSON());
     }

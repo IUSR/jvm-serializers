@@ -1,10 +1,10 @@
 package serializers.json;
 
-import static argo.jdom.JsonNodeFactories.aJsonArray;
-import static argo.jdom.JsonNodeFactories.aJsonNull;
-import static argo.jdom.JsonNodeFactories.aJsonNumber;
-import static argo.jdom.JsonNodeFactories.aJsonObject;
-import static argo.jdom.JsonNodeFactories.aJsonString;
+import static argo.jdom.JsonNodeFactories.array;
+import static argo.jdom.JsonNodeFactories.nullNode;
+import static argo.jdom.JsonNodeFactories.number;
+import static argo.jdom.JsonNodeFactories.object;
+import static argo.jdom.JsonNodeFactories.string;
 import static argo.jdom.JsonNodeType.NULL;
 import static java.lang.Integer.parseInt;
 import static java.lang.Long.parseLong;
@@ -75,24 +75,24 @@ public class JsonArgoTree
     private static final JsonFormatter JSON_FORMATTER = new CompactJsonFormatter();
     private static final JdomParser JDOM_PARSER = new JdomParser();
 
-    private static final JsonStringNode MEDIA_KEY = aJsonString("media");
-    private static final JsonStringNode IMAGES_KEY = aJsonString("images");
-    private static final JsonStringNode URI_KEY = aJsonString("uri");
-    private static final JsonStringNode WIDTH_KEY = aJsonString("width");
-    private static final JsonStringNode HEIGHT_KEY = aJsonString("height");
-    private static final JsonStringNode SIZE_KEY = aJsonString("size");
-    private static final JsonStringNode COPYRIGHT_KEY = aJsonString("copyright");
-    private static final JsonStringNode DURATION_KEY = aJsonString("duration");
-    private static final JsonStringNode TITLE_KEY = aJsonString("title");
-    private static final JsonStringNode PLAYER_KEY = aJsonString("player");
-    private static final JsonStringNode FORMAT_KEY = aJsonString("format");
-    private static final JsonStringNode PERSONS_KEY = aJsonString("persons");
-    private static final JsonStringNode BIT_RATE_KEY = aJsonString("bitrate");
+    private static final JsonStringNode MEDIA_KEY = string("media");
+    private static final JsonStringNode IMAGES_KEY = string("images");
+    private static final JsonStringNode URI_KEY = string("uri");
+    private static final JsonStringNode WIDTH_KEY = string("width");
+    private static final JsonStringNode HEIGHT_KEY = string("height");
+    private static final JsonStringNode SIZE_KEY = string("size");
+    private static final JsonStringNode COPYRIGHT_KEY = string("copyright");
+    private static final JsonStringNode DURATION_KEY = string("duration");
+    private static final JsonStringNode TITLE_KEY = string("title");
+    private static final JsonStringNode PLAYER_KEY = string("player");
+    private static final JsonStringNode FORMAT_KEY = string("format");
+    private static final JsonStringNode PERSONS_KEY = string("persons");
+    private static final JsonStringNode BIT_RATE_KEY = string("bitrate");
 
     private String writeMediaContent(MediaContent mediaContent)
     {
       return JSON_FORMATTER.format(
-                aJsonObject(
+                object(
                         new JsonField(MEDIA_KEY, createMediaObject(mediaContent.media)),
                         new JsonField(IMAGES_KEY, createImagesArray(mediaContent.images))
                 ));
@@ -103,15 +103,15 @@ public class JsonArgoTree
       List<JsonNode> jsonNodes = new ArrayList<JsonNode>(images.size() * 2);
       for (Image image : images)
       {
-        jsonNodes.add(aJsonObject(
-                    new JsonField(HEIGHT_KEY, aJsonNumber(String.valueOf(image.height))),
-                    new JsonField(SIZE_KEY, aJsonString(image.size.name())),
-                    new JsonField(TITLE_KEY, aJsonString(image.title)),
-                    new JsonField(URI_KEY, aJsonString(image.uri)),
-                    new JsonField(WIDTH_KEY, aJsonNumber(String.valueOf(image.width)))
+        jsonNodes.add(object(
+                    new JsonField(HEIGHT_KEY, number(String.valueOf(image.height))),
+                    new JsonField(SIZE_KEY, string(image.size.name())),
+                    new JsonField(TITLE_KEY, string(image.title)),
+                    new JsonField(URI_KEY, string(image.uri)),
+                    new JsonField(WIDTH_KEY, number(String.valueOf(image.width)))
             ));
       }
-      return aJsonArray(jsonNodes);
+      return array(jsonNodes);
     }
 
     private JsonNode createMediaObject(Media media)
@@ -119,26 +119,26 @@ public class JsonArgoTree
       List<JsonNode> persons = new ArrayList<JsonNode>(media.persons.size() * 2);
       for (String person : media.persons)
       {
-        persons.add(aJsonString(person));
+        persons.add(string(person));
       }
-      JsonNode value = media.copyright == null ? aJsonNull() : aJsonString(media.copyright);
+      JsonNode value = media.copyright == null ? nullNode() : string(media.copyright);
       List<JsonField> jsonFields = new ArrayList<JsonField>(asList(
-                new JsonField(URI_KEY, aJsonString(media.uri)),
-                new JsonField(TITLE_KEY, aJsonString(media.title)),
-                new JsonField(WIDTH_KEY, aJsonNumber(String.valueOf(media.width))),
-                new JsonField(HEIGHT_KEY, aJsonNumber(String.valueOf(media.height))),
-                new JsonField(FORMAT_KEY, aJsonString(media.format)),
-                new JsonField(DURATION_KEY, aJsonNumber(String.valueOf(media.duration))),
-                new JsonField(SIZE_KEY, aJsonNumber(String.valueOf(media.size))),
-                new JsonField(PLAYER_KEY, aJsonString(media.player.name())),
+                new JsonField(URI_KEY, string(media.uri)),
+                new JsonField(TITLE_KEY, string(media.title)),
+                new JsonField(WIDTH_KEY, number(String.valueOf(media.width))),
+                new JsonField(HEIGHT_KEY, number(String.valueOf(media.height))),
+                new JsonField(FORMAT_KEY, string(media.format)),
+                new JsonField(DURATION_KEY, number(String.valueOf(media.duration))),
+                new JsonField(SIZE_KEY, number(String.valueOf(media.size))),
+                new JsonField(PLAYER_KEY, string(media.player.name())),
                 new JsonField(COPYRIGHT_KEY, value),
-                new JsonField(PERSONS_KEY, aJsonArray(persons))
+                new JsonField(PERSONS_KEY, array(persons))
           ));
       if (media.hasBitrate)
       {
-        jsonFields.add(new JsonField(BIT_RATE_KEY, aJsonNumber(String.valueOf(media.bitrate))));
+        jsonFields.add(new JsonField(BIT_RATE_KEY, number(String.valueOf(media.bitrate))));
       }
-      return aJsonObject(jsonFields);
+      return object(jsonFields);
     }
 
     MediaContent readMediaContent(String mediaContentJsonInput) throws Exception

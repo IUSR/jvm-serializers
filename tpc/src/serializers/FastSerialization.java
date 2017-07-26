@@ -1,7 +1,7 @@
 package serializers;
 
 import data.media.*;
-import de.ruedigermoeller.serialization.*;
+import org.nustaq.serialization.*;
 
 import java.io.*;
 

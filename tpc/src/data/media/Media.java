@@ -33,7 +33,7 @@ public class Media implements java.io.Serializable {
 	public long size;
 	public int bitrate;         // Can be unset.
 
-	@jsonij.json.annotation.JSONIgnore // required by JSONiJ
+	@cc.plural.jsonij.marshal.annotation.JSONIgnore // required by JSONiJ
 	@org.codehaus.jackson.annotate.JsonIgnore // Jackson 1.x
         @com.fasterxml.jackson.annotation.JsonIgnore // Jackson 2.x
 	public boolean hasBitrate;
