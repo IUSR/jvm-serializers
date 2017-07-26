@@ -81,7 +81,12 @@ public class JavaxJsonTransformer extends Transformer<MediaContent, JsonStructur
 		JsonArray personsJson = getCheckedArrayProperty(mediaJson, FULL_FIELD_NAME_PERSONS);
 		List<String> persons = new ArrayList<String>();
 		for (JsonValue value : personsJson) {
-			persons.add(value.toString());
+//			persons.add(value.toString());
+			if (value.getValueType() == JsonValue.ValueType.STRING) {
+				persons.add(JsonString.class.cast(value).getString());
+			} else {
+				persons.add(value.toString());
+			}
 		}
 		media.persons = persons;
 		mc.media = media;
