@@ -31,6 +31,7 @@ activemqprotobuf_generator ?= java -cp "$(activemqprotobuf_cp)" org.apache.activ
 avro_cp ?= $(call mkcp,$(wildcard lib/extra/avro-tools-*.jar lib/avro-*.jar lib/jackson-*.jar lib/jopt-simple-*.jar lib/velocity-*.jar lib/slf4j-*.jar))
 avro_generator ?= java -cp "$(avro_cp)" org.apache.avro.tool.Main
 protostuff_compiler ?= $(wildcard lib/protostuff-compiler-*.jar)
+protostuff_compiler_cp ?= $(call mkcp,$(wildcard lib/*.jar))
 dslplatform_compiler = java -jar lib/dsl-clc.jar
 dslplatform_dir = build/dslplatform
 flatbuffers_generator ?= flatc
@@ -126,7 +127,7 @@ build/gen/$(2).gen: schema/$(2)
 ifneq ($(findstring .activemq.proto,$(2)),)
 	$(p1)$(activemqprotobuf_generator) --out=build/gen/$(2) $$<
 else ifneq ($(findstring .protostuff.proto,$(2)),)
-	$(p1)java -Dsource=$$< -Doutput=java_bean -Doptions=builder_pattern,generate_field_map,separate_schema -DoutputDir=build/gen/$(2) -jar $(protostuff_compiler)
+	$(p1)java -Dsource=$$< -Doutput=java_bean -Doptions=builder_pattern,generate_field_map,separate_schema -DoutputDir=build/gen/$(2) -cp "${protostuff_compiler_cp}" io.protostuff.compiler.CompilerMain
 else ifneq ($(findstring .proto,$(2)),)
 	$(p1)$(protobuf_generator) --java_out=build/gen/$(2) $$<
 else ifneq ($(findstring .thrift,$(2)),)
@@ -225,4 +226,3 @@ ifneq ($(wildcard build),)
 	# Delete: build/**
 	$(p1)-rm -r build
 endif
-
