@@ -26,13 +26,13 @@ mkcp = $(subst $(space),$(path_sep),$(1))
 
 protobuf_generator ?= protoc
 thrift_generator ?= thrift
-activemqprotobuf_cp := $(call mkcp,$(wildcard lib/activemq-*.jar))
+activemqprotobuf_cp := $(call mkcp,$(wildcard lib/activemq-*.jar lib/provided/activemq-*.jar))
 activemqprotobuf_generator ?= java -cp "$(activemqprotobuf_cp)" org.apache.activemq.protobuf.compiler.AltJavaGenerator
 avro_cp ?= $(call mkcp,$(wildcard lib/extra/avro-tools-*.jar lib/avro-*.jar lib/jackson-*.jar lib/jopt-simple-*.jar lib/velocity-*.jar lib/slf4j-*.jar))
 avro_generator ?= java -cp "$(avro_cp)" org.apache.avro.tool.Main
 protostuff_compiler ?= $(wildcard lib/protostuff-compiler-*.jar)
-protostuff_compiler_cp ?= $(call mkcp,$(wildcard lib/*.jar))
-dslplatform_compiler = java -jar lib/dsl-clc.jar
+protostuff_compiler_cp ?= $(call mkcp,$(wildcard lib/*.jar lib/provided/*.jar))
+dslplatform_compiler = java -jar $(wildcard lib/dsl-clc-*.jar)
 dslplatform_dir = build/dslplatform
 flatbuffers_generator ?= flatc
 capnproto_generator ?= capnp
@@ -82,7 +82,7 @@ build/gen-cp: schema
 
 build/lib-cp: lib
 	$(p2)mkdir -p build
-	$(p1)echo "$(call mkcp,$(wildcard lib/*.jar))" > "$@"
+	$(p1)echo "$(call mkcp,$(wildcard lib/*.jar lib/provided/*.jar))" > "$@"
 
 ##########################################################################
 # Generate and Compile Bindings
